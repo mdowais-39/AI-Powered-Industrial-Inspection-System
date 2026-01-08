@@ -45,8 +45,12 @@ const AppContent = () => {
       {/* Main Layout */}
       <div className="flex relative z-10">
         {/* Sidebar - Hidden on mobile, shown on desktop */}
-        <div className={`${mobileMenuOpen ? 'block' : 'hidden'} lg:block fixed lg:relative z-40`}>
-          <Sidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+        <div className={`${mobileMenuOpen ? 'block' : 'hidden'} lg:block`}>
+          <Sidebar 
+            isCollapsed={sidebarCollapsed} 
+            setIsCollapsed={setSidebarCollapsed}
+            isMobile={mobileMenuOpen}
+          />
         </div>
 
         {/* Overlay for mobile menu */}
@@ -58,7 +62,7 @@ const AppContent = () => {
         )}
         
         {/* Main Content */}
-        <main className={`flex-1 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64'} p-4 lg:p-8 transition-all duration-300 flex items-center justify-center min-h-screen`}>
+        <main className={`flex-1 p-4 lg:p-8 transition-all duration-300 flex items-center justify-center min-h-screen ${sidebarCollapsed ? 'lg:pl-24' : 'lg:pl-72'}`}>
           <div className="w-full max-w-7xl mx-auto">
             {renderScreen()}
           </div>
