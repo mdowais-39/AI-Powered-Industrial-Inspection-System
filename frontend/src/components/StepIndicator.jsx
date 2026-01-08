@@ -28,7 +28,13 @@ const StepIndicator = () => {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: index * 0.1 }}
             >
-              {currentStep > step.id ? '✓' : step.id + 1}
+              {currentStep > step.id ? (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                step.id + 1
+              )}
             </motion.div>
             <span className={`text-xs mt-2 font-medium ${
               currentStep >= step.id ? 'text-neon-cyan' : 'text-gray-500'
