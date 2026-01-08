@@ -19,22 +19,22 @@ const ReviewScreen = () => {
   return (
     <motion.div
       data-testid="review-screen"
-      className="max-w-6xl mx-auto px-4 py-8"
+      className="w-full mx-auto px-4 py-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <StepIndicator />
 
-      <div className="mb-8">
-        <h2 className="text-4xl font-bold text-white mb-2">Review Measurements</h2>
-        <p className="text-gray-400">
+      <div className="mb-10 text-center max-w-4xl mx-auto">
+        <h2 className="text-4xl font-bold text-white mb-3">Review Measurements</h2>
+        <p className="text-gray-400 text-lg">
           Please verify all measurements before submitting for AI inspection.
         </p>
       </div>
 
       {/* Summary Cards */}
-      <div className="space-y-4 mb-8">
+      <div className="space-y-4 mb-10 max-w-5xl mx-auto">
         {measurements.map((measurement, index) => (
           <motion.div
             key={measurement.id}
