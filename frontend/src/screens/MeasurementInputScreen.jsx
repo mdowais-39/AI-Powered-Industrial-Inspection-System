@@ -96,7 +96,7 @@ const MeasurementInputScreen = () => {
             ))}
           </div>
 
-          <div className="flex justify-center items-center gap-6 pt-6">
+          <div className="flex justify-center items-center gap-6 pt-8 mt-8">
             <button
               data-testid="back-to-count-btn"
               onClick={() => setShowCards(false)}
