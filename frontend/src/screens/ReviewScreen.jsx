@@ -79,40 +79,40 @@ const ReviewScreen = () => {
 
       {/* Summary Stats */}
       <motion.div
-        className="glass rounded-xl p-6 mb-8"
+        className="glass rounded-xl p-8 mb-12 max-w-5xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <h3 className="text-lg font-semibold text-white mb-4">Inspection Summary</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <h3 className="text-lg font-semibold text-white mb-6 text-center">Inspection Summary</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="text-center">
             <p className="text-3xl font-bold text-neon-cyan">{measurements.length}</p>
-            <p className="text-sm text-gray-400">Total Measurements</p>
+            <p className="text-sm text-gray-400 mt-2">Total Measurements</p>
           </div>
           <div className="text-center">
             <p className="text-3xl font-bold text-neon-blue">{measurements.filter(m => m.value).length}</p>
-            <p className="text-sm text-gray-400">With Values</p>
+            <p className="text-sm text-gray-400 mt-2">With Values</p>
           </div>
           <div className="text-center">
             <p className="text-3xl font-bold text-neon-green">{measurements.length}</p>
-            <p className="text-sm text-gray-400">User-Provided</p>
+            <p className="text-sm text-gray-400 mt-2">User-Provided</p>
           </div>
           <div className="text-center">
             <p className="text-3xl font-bold text-white">100%</p>
-            <p className="text-sm text-gray-400">Completeness</p>
+            <p className="text-sm text-gray-400 mt-2">Completeness</p>
           </div>
         </div>
       </motion.div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-6 pt-6 max-w-3xl mx-auto">
         <button
           data-testid="edit-measurements-btn"
           onClick={handleEdit}
-          className="w-full md:w-auto px-8 py-3 bg-dark-elevated text-gray-300 font-semibold rounded-lg hover:bg-dark-surface border border-white/10 hover:border-neon-blue/30 transition-all duration-300"
+          className="w-full md:w-auto px-8 py-4 bg-dark-elevated text-gray-300 font-semibold rounded-lg hover:bg-dark-surface border border-white/10 hover:border-neon-blue/30 transition-all duration-300 text-lg"
         >
-          ✏️ Edit Measurements
+          Edit Measurements
         </button>
 
         <button
