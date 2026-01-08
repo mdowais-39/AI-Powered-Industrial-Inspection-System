@@ -39,19 +39,31 @@ const LandingScreen = () => {
         transition={{ delay: 0.4 }}
       >
         <div className="glass rounded-lg p-6 hover:border-neon-blue/50 transition-all duration-300">
-          <div className="text-4xl mb-3">🎯</div>
+          <div className="mb-3 text-neon-blue">
+            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
           <h3 className="text-lg font-semibold text-neon-blue mb-2">High Precision</h3>
           <p className="text-sm text-gray-400">Micron-level accuracy for critical components</p>
         </div>
 
         <div className="glass rounded-lg p-6 hover:border-neon-blue/50 transition-all duration-300">
-          <div className="text-4xl mb-3">⚡</div>
+          <div className="mb-3 text-neon-blue">
+            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
           <h3 className="text-lg font-semibold text-neon-blue mb-2">Real-Time Analysis</h3>
           <p className="text-sm text-gray-400">Instant AI-powered defect detection</p>
         </div>
 
         <div className="glass rounded-lg p-6 hover:border-neon-blue/50 transition-all duration-300">
-          <div className="text-4xl mb-3">🔒</div>
+          <div className="mb-3 text-neon-blue">
+            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
           <h3 className="text-lg font-semibold text-neon-blue mb-2">Industry 4.0 Ready</h3>
           <p className="text-sm text-gray-400">Seamless integration with modern workflows</p>
         </div>
