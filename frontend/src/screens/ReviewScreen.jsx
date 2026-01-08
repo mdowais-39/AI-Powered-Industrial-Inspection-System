@@ -106,7 +106,7 @@ const ReviewScreen = () => {
       </motion.div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-6 pt-6 max-w-3xl mx-auto">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-6 pt-8 mt-8 max-w-3xl mx-auto">
         <button
           data-testid="edit-measurements-btn"
           onClick={handleEdit}
