@@ -73,7 +73,7 @@ const LandingScreen = () => {
       <motion.button
         data-testid="start-inspection-btn"
         onClick={() => setCurrentStep(1)}
-        className="px-10 py-4 bg-gradient-to-r from-neon-blue to-neon-cyan text-white font-semibold rounded-lg shadow-neon-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105 text-lg"
+        className="mt-8 px-10 py-4 bg-gradient-to-r from-neon-blue to-neon-cyan text-white font-semibold rounded-lg shadow-neon-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105 text-lg"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.6 }}
