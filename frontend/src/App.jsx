@@ -58,8 +58,8 @@ const AppContent = () => {
         )}
         
         {/* Main Content */}
-        <main className={`flex-1 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64'} p-4 lg:p-8 w-full transition-all duration-300`}>
-          <div className="max-w-7xl mx-auto">
+        <main className={`flex-1 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64'} p-4 lg:p-8 w-full transition-all duration-300 flex items-center justify-center`}>
+          <div className="w-full max-w-7xl">
             {renderScreen()}
           </div>
         </main>
