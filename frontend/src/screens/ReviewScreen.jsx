@@ -118,7 +118,7 @@ const ReviewScreen = () => {
         <button
           data-testid="submit-for-inspection-btn"
           onClick={handleSubmit}
-          className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-neon-blue to-neon-cyan text-white font-semibold rounded-lg shadow-neon-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105"
+          className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-neon-blue to-neon-cyan text-white font-semibold rounded-lg shadow-neon-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105 text-lg"
         >
           Submit for AI Inspection →
         </button>
