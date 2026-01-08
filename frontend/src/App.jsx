@@ -11,6 +11,7 @@ import './App.css';
 const AppContent = () => {
   const { currentStep } = useInspection();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const renderScreen = () => {
     switch (currentStep) {
@@ -45,7 +46,7 @@ const AppContent = () => {
       <div className="flex relative z-10">
         {/* Sidebar - Hidden on mobile, shown on desktop */}
         <div className={`${mobileMenuOpen ? 'block' : 'hidden'} lg:block fixed lg:relative z-40`}>
-          <Sidebar />
+          <Sidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
         </div>
 
         {/* Overlay for mobile menu */}
@@ -57,7 +58,7 @@ const AppContent = () => {
         )}
         
         {/* Main Content */}
-        <main className="flex-1 lg:ml-64 p-4 lg:p-8 w-full">
+        <main className={`flex-1 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64'} p-4 lg:p-8 w-full transition-all duration-300`}>
           <div className="max-w-7xl mx-auto">
             {renderScreen()}
           </div>
