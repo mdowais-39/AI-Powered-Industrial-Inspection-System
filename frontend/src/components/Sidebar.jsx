@@ -1,7 +1,7 @@
 import React from 'react';
 import { useInspection } from '../context/InspectionContext';
 
-const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
+const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false }) => {
   const { currentStep } = useInspection();
 
   const navItems = [
@@ -28,7 +28,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   ];
 
   return (
-    <div className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen bg-dark-surface border-r border-white/10 flex flex-col fixed left-0 top-0 z-10 transition-all duration-300`}>
+    <div className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen bg-dark-surface border-r border-white/10 flex flex-col ${isMobile ? 'fixed' : 'fixed lg:sticky'} left-0 top-0 ${isMobile ? 'z-50' : 'z-10'} transition-all duration-300`}>
       {/* Logo/Title */}
       <div className="p-6 border-b border-white/10 flex items-center justify-between">
         <div className={`${isCollapsed ? 'hidden' : 'block'}`}>
