@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { InspectionProvider, useInspection } from './context/InspectionContext';
+import AnimatedBackground from './components/AnimatedBackground';
+import Sidebar from './components/Sidebar';
+import LandingScreen from './screens/LandingScreen';
+import MeasurementInputScreen from './screens/MeasurementInputScreen';
+import ReviewScreen from './screens/ReviewScreen';
+import ResultsScreen from './screens/ResultsScreen';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const AppContent = () => {
+  const { currentStep } = useInspection();
+
+  const renderScreen = () => {
+    switch (currentStep) {
+      case 0:
+        return <LandingScreen />;
+      case 1:
+        return <MeasurementInputScreen />;
+      case 2:
+        return <ReviewScreen />;
+      case 3:
+        return <ResultsScreen />;
+      default:
+        return <LandingScreen />;
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-dark-bg text-white relative overflow-hidden">
+      <AnimatedBackground />
+      
+      {/* Main Layout */}
+      <div className="flex relative z-10">
+        <Sidebar />
+        
+        {/* Main Content */}
+        <main className="flex-1 ml-64 p-8">
+          <div className="max-w-7xl mx-auto">
+            {renderScreen()}
+          </div>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default App
+const App = () => {
+  return (
+    <InspectionProvider>
+      <AppContent />
+    </InspectionProvider>
+  );
+};
+
+export default App;
