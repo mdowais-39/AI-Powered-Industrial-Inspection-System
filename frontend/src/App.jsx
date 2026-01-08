@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { InspectionProvider, useInspection } from './context/InspectionContext';
 import AnimatedBackground from './components/AnimatedBackground';
 import Sidebar from './components/Sidebar';
@@ -10,6 +10,7 @@ import './App.css';
 
 const AppContent = () => {
   const { currentStep } = useInspection();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const renderScreen = () => {
     switch (currentStep) {
@@ -30,12 +31,33 @@ const AppContent = () => {
     <div className="min-h-screen bg-dark-bg text-white relative overflow-hidden">
       <AnimatedBackground />
       
+      {/* Mobile Menu Button */}
+      <button
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-dark-elevated rounded-lg border border-white/10"
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
       {/* Main Layout */}
       <div className="flex relative z-10">
-        <Sidebar />
+        {/* Sidebar - Hidden on mobile, shown on desktop */}
+        <div className={`${mobileMenuOpen ? 'block' : 'hidden'} lg:block fixed lg:relative z-40`}>
+          <Sidebar />
+        </div>
+
+        {/* Overlay for mobile menu */}
+        {mobileMenuOpen && (
+          <div 
+            className="lg:hidden fixed inset-0 bg-black/50 z-30"
+            onClick={() => setMobileMenuOpen(false)}
+          ></div>
+        )}
         
         {/* Main Content */}
-        <main className="flex-1 ml-64 p-8">
+        <main className="flex-1 lg:ml-64 p-4 lg:p-8 w-full">
           <div className="max-w-7xl mx-auto">
             {renderScreen()}
           </div>
