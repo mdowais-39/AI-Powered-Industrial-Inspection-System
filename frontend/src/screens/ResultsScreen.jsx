@@ -129,7 +129,7 @@ const ResultsScreen = () => {
                         : 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/30'
                     }`}
                   >
-                    {result.status === 'passed' ? '✓ Passed' : '⚠️ Attention'}
+                    {result.status === 'passed' ? 'Passed' : 'Attention'}
                   </span>
                 </div>
 
