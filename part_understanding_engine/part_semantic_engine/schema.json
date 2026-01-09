@@ -1,0 +1,62 @@
+{ 
+  "type": "object",
+  "properties": {
+    "part_name": {
+      "type": ["string", "null"],
+      "description": "Generic name of the part if known, otherwise null"
+    },
+    "description": {
+      "type": "string",
+      "description": "Vision-only description of the part"
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Generic component name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Visual description of the component"
+          },
+          "approximate_location": {
+            "type": ["string", "null"],
+            "description": "Approximate visual location (top, center, left, etc.)"
+          },
+          "measurements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": ["number", "null"]
+                },
+                "unit": {
+                  "type": ["string", "null"]
+                },
+                "source": {
+                  "type": "string",
+                  "enum": ["user", "llm", "unknown"]
+                }
+              },
+              "required": ["name", "value", "unit", "source"]
+            }
+          }
+        },
+        "required": ["name", "description", "approximate_location", "measurements"]
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "required": ["part_name", "description", "components", "confidence"]
+}
