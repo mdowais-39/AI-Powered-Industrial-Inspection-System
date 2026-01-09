@@ -98,22 +98,22 @@ const AssemblyVerificationPage = () => {
   return (
     <motion.div
       data-testid="assembly-verification-page"
-      className="w-full max-w-7xl mx-auto px-4 py-8"
+      className="w-full max-w-[1600px] mx-auto px-6 py-10"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white mb-3">
+      <div className="mb-12">
+        <h1 className="text-5xl font-bold text-white mb-4">
           <span className="text-neon-cyan glow-text">Assembly & Missing-Part Verification</span>
         </h1>
-        <p className="text-lg text-gray-400 max-w-3xl">
+        <p className="text-xl text-gray-400 max-w-4xl leading-relaxed">
           Automated assembly line inspection for detecting missing parts, extra components, and misaligned assemblies against expected product structure.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         {/* Expected Assembly */}
         <motion.div
           className="glass rounded-xl p-6"
