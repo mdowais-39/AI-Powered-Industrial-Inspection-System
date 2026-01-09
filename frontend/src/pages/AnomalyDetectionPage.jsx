@@ -200,24 +200,24 @@ const AnomalyDetectionPage = () => {
         <div className="space-y-6">
           {/* System Info */}
           <motion.div
-            className="glass rounded-xl p-6"
+            className="glass rounded-2xl p-7"
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <h3 className="text-lg font-semibold text-white mb-4">System Status</h3>
-            <div className="space-y-3">
+            <h3 className="text-xl font-semibold text-white mb-5">System Status</h3>
+            <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-400">AI Model</span>
-                <span className="text-sm text-white font-mono">AnomalyNet-v3</span>
+                <span className="text-sm text-white font-mono bg-dark-surface px-3 py-1 rounded-lg">AnomalyNet-v3</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-400">Resolution</span>
-                <span className="text-sm text-white font-mono">1920x1080</span>
+                <span className="text-sm text-white font-mono bg-dark-surface px-3 py-1 rounded-lg">1920x1080</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-400">Processing</span>
-                <span className="text-sm text-neon-green font-mono">GPU Accelerated</span>
+                <span className="text-sm text-neon-green font-mono bg-neon-green/10 px-3 py-1 rounded-lg border border-neon-green/30">GPU Accelerated</span>
               </div>
             </div>
           </motion.div>
@@ -225,45 +225,45 @@ const AnomalyDetectionPage = () => {
           {/* Detection Stats */}
           {inspectionStatus === 'complete' && (
             <motion.div
-              className="glass rounded-xl p-6"
+              className="glass rounded-2xl p-7"
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              <h3 className="text-lg font-semibold text-white mb-4">Detection Details</h3>
-              <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-white mb-5">Detection Details</h3>
+              <div className="space-y-5">
                 <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm text-gray-400">Surface Quality</span>
-                    <span className="text-sm text-white">{anomalyDetected ? '68%' : '98%'}</span>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm text-gray-400 font-medium">Surface Quality</span>
+                    <span className="text-sm text-white font-semibold">{anomalyDetected ? '68%' : '98%'}</span>
                   </div>
-                  <div className="w-full bg-dark-elevated rounded-full h-2">
+                  <div className="w-full bg-dark-elevated rounded-full h-2.5">
                     <div 
-                      className={`h-2 rounded-full ${anomalyDetected ? 'bg-yellow-400' : 'bg-neon-green'}`}
+                      className={`h-2.5 rounded-full ${anomalyDetected ? 'bg-yellow-400' : 'bg-neon-green'}`}
                       style={{ width: anomalyDetected ? '68%' : '98%' }}
                     ></div>
                   </div>
                 </div>
                 <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm text-gray-400">Texture Consistency</span>
-                    <span className="text-sm text-white">{anomalyDetected ? '72%' : '96%'}</span>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm text-gray-400 font-medium">Texture Consistency</span>
+                    <span className="text-sm text-white font-semibold">{anomalyDetected ? '72%' : '96%'}</span>
                   </div>
-                  <div className="w-full bg-dark-elevated rounded-full h-2">
+                  <div className="w-full bg-dark-elevated rounded-full h-2.5">
                     <div 
-                      className={`h-2 rounded-full ${anomalyDetected ? 'bg-yellow-400' : 'bg-neon-green'}`}
+                      className={`h-2.5 rounded-full ${anomalyDetected ? 'bg-yellow-400' : 'bg-neon-green'}`}
                       style={{ width: anomalyDetected ? '72%' : '96%' }}
                     ></div>
                   </div>
                 </div>
                 <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm text-gray-400">Overall Score</span>
-                    <span className="text-sm text-white">{confidence.toFixed(0)}%</span>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm text-gray-400 font-medium">Overall Score</span>
+                    <span className="text-sm text-white font-semibold">{confidence.toFixed(0)}%</span>
                   </div>
-                  <div className="w-full bg-dark-elevated rounded-full h-2">
+                  <div className="w-full bg-dark-elevated rounded-full h-2.5">
                     <div 
-                      className={`h-2 rounded-full ${anomalyDetected ? 'bg-red-500' : 'bg-neon-green'}`}
+                      className={`h-2.5 rounded-full ${anomalyDetected ? 'bg-red-500' : 'bg-neon-green'}`}
                       style={{ width: `${confidence}%` }}
                     ></div>
                   </div>
@@ -274,28 +274,28 @@ const AnomalyDetectionPage = () => {
 
           {/* Info Card */}
           <motion.div
-            className="glass rounded-xl p-6"
+            className="glass rounded-2xl p-7"
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <h3 className="text-lg font-semibold text-white mb-3">Detection Types</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li className="flex items-start space-x-2">
-                <span className="text-neon-cyan mt-1">•</span>
-                <span>Surface defects & scratches</span>
+            <h3 className="text-xl font-semibold text-white mb-4">Detection Types</h3>
+            <ul className="space-y-3 text-sm text-gray-400">
+              <li className="flex items-start space-x-3">
+                <span className="text-neon-cyan mt-0.5 text-lg">•</span>
+                <span className="leading-relaxed">Surface defects & scratches</span>
               </li>
-              <li className="flex items-start space-x-2">
-                <span className="text-neon-cyan mt-1">•</span>
-                <span>Texture inconsistencies</span>
+              <li className="flex items-start space-x-3">
+                <span className="text-neon-cyan mt-0.5 text-lg">•</span>
+                <span className="leading-relaxed">Texture inconsistencies</span>
               </li>
-              <li className="flex items-start space-x-2">
-                <span className="text-neon-cyan mt-1">•</span>
-                <span>Visual deviations</span>
+              <li className="flex items-start space-x-3">
+                <span className="text-neon-cyan mt-0.5 text-lg">•</span>
+                <span className="leading-relaxed">Visual deviations</span>
               </li>
-              <li className="flex items-start space-x-2">
-                <span className="text-neon-cyan mt-1">•</span>
-                <span>Material anomalies</span>
+              <li className="flex items-start space-x-3">
+                <span className="text-neon-cyan mt-0.5 text-lg">•</span>
+                <span className="leading-relaxed">Material anomalies</span>
               </li>
             </ul>
           </motion.div>
