@@ -2,30 +2,41 @@ import React from 'react';
 import { useInspection } from '../context/InspectionContext';
 
 const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false }) => {
-  const { currentStep } = useInspection();
+  const { currentPage, setCurrentPage } = useInspection();
 
   const navItems = [
-    { id: 0, label: 'Inspection', icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-    )},
-    { id: 1, label: 'Measurements', icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-      </svg>
-    )},
-    { id: 2, label: 'Review', icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    )},
-    { id: 3, label: 'Results', icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
-    )},
+    { 
+      id: 'anomaly', 
+      label: 'Anomaly Detection', 
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+      )
+    },
+    { 
+      id: 'measurement', 
+      label: 'Object / Size Measurement', 
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+      )
+    },
+    { 
+      id: 'assembly', 
+      label: 'Assembly Verification', 
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+        </svg>
+      )
+    },
   ];
+
+  const handlePageChange = (pageId) => {
+    setCurrentPage(pageId);
+  };
 
   return (
     <div className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen bg-dark-surface border-r border-white/10 flex flex-col ${isMobile ? 'fixed' : 'fixed lg:sticky'} left-0 top-0 ${isMobile ? 'z-50' : 'z-10'} transition-all duration-300`}>
@@ -59,29 +70,30 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobile = false }) => {
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-2">
         {navItems.map((item) => (
-          <div
+          <button
             key={item.id}
-            data-testid={`nav-${item.label.toLowerCase()}`}
-            className={`p-3 rounded-lg transition-all duration-300 ${
-              currentStep === item.id
+            onClick={() => handlePageChange(item.id)}
+            data-testid={`nav-${item.id}`}
+            className={`w-full p-3 rounded-lg transition-all duration-300 ${
+              currentPage === item.id
                 ? 'bg-neon-blue/20 border border-neon-blue/50 shadow-neon'
-                : 'bg-dark-elevated/50 border border-transparent hover:border-white/10'
+                : 'bg-dark-elevated/50 border border-transparent hover:border-white/10 hover:bg-dark-elevated'
             }`}
             title={isCollapsed ? item.label : ''}
           >
             <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'}`}>
-              <span className={currentStep === item.id ? 'text-neon-cyan' : 'text-gray-400'}>
+              <span className={currentPage === item.id ? 'text-neon-cyan' : 'text-gray-400'}>
                 {item.icon}
               </span>
               {!isCollapsed && (
                 <span className={`text-sm font-medium ${
-                  currentStep === item.id ? 'text-neon-cyan' : 'text-gray-400'
+                  currentPage === item.id ? 'text-neon-cyan' : 'text-gray-400'
                 }`}>
                   {item.label}
                 </span>
               )}
             </div>
-          </div>
+          </button>
         ))}
       </nav>
 
