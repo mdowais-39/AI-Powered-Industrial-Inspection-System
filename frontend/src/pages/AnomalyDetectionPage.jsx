@@ -34,22 +34,22 @@ const AnomalyDetectionPage = () => {
   return (
     <motion.div
       data-testid="anomaly-detection-page"
-      className="w-full max-w-7xl mx-auto px-4 py-8"
+      className="w-full max-w-[1600px] mx-auto px-6 py-10"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white mb-3">
+      <div className="mb-12">
+        <h1 className="text-5xl font-bold text-white mb-4">
           <span className="text-neon-cyan glow-text">Anomaly Detection</span>
         </h1>
-        <p className="text-lg text-gray-400 max-w-3xl">
+        <p className="text-xl text-gray-400 max-w-4xl leading-relaxed">
           AI-powered visual anomaly inspection system for detecting surface defects, texture inconsistencies, and unexpected visual deviations in industrial products.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Inspection Panel */}
         <div className="lg:col-span-2">
           <motion.div
