@@ -11,6 +11,10 @@ export const useInspection = () => {
 };
 
 export const InspectionProvider = ({ children }) => {
+  // Page navigation: 'anomaly' | 'measurement' | 'assembly'
+  const [currentPage, setCurrentPage] = useState('measurement');
+  
+  // For Object/Size Measurement page (preserved existing workflow)
   const [currentStep, setCurrentStep] = useState(0);
   const [measurementCount, setMeasurementCount] = useState(0);
   const [measurements, setMeasurements] = useState([]);
@@ -40,6 +44,10 @@ export const InspectionProvider = ({ children }) => {
   };
 
   const value = {
+    // Page navigation
+    currentPage,
+    setCurrentPage,
+    // Measurement page states (preserved)
     currentStep,
     setCurrentStep,
     measurementCount,
