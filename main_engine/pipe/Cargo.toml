@@ -1,0 +1,26 @@
+[package]
+name = "pipe"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+members = [
+    "pipe_core",
+    "detect",
+    "preprocess",
+    "io",
+    "qualify",
+    "output",
+    "python_bridge",
+    "validate"
+, "calliberation", "measurement"]
+[dependencies]
+anyhow = "1.0.100"
+opencv = "0.98.1"
+pipe_core = { path = "pipe_core" }
+output= { path = "output" }
+io= { path = "io" }
+detect = { version = "0.1.0", path = "detect" }
+measurement = { version = "0.1.0", path = "measurement" }
+calliberation = { version = "0.1.0", path = "calliberation" }
+
