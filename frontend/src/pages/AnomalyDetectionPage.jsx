@@ -51,21 +51,21 @@ const AnomalyDetectionPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Inspection Panel */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
           <motion.div
-            className="glass rounded-xl p-6 mb-6"
+            className="glass rounded-2xl p-8"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-white">Inspection Panel</h2>
-              <div className="flex items-center space-x-2">
-                <div className={`w-2 h-2 rounded-full ${
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold text-white">Inspection Panel</h2>
+              <div className="flex items-center space-x-3">
+                <div className={`w-3 h-3 rounded-full ${
                   inspectionStatus === 'running' ? 'bg-yellow-400 animate-pulse' : 
                   inspectionStatus === 'complete' ? 'bg-neon-green' : 'bg-gray-500'
                 }`}></div>
-                <span className="text-sm text-gray-400 font-mono">
+                <span className="text-sm text-gray-400 font-mono font-medium">
                   {inspectionStatus === 'idle' && 'Ready'}
                   {inspectionStatus === 'running' && 'Analyzing...'}
                   {inspectionStatus === 'complete' && 'Complete'}
@@ -74,7 +74,7 @@ const AnomalyDetectionPage = () => {
             </div>
 
             {/* Image/Video Placeholder with Heatmap Overlay */}
-            <div className="relative bg-dark-elevated rounded-lg overflow-hidden aspect-video flex items-center justify-center border border-white/10">
+            <div className="relative bg-dark-elevated rounded-xl overflow-hidden aspect-video flex items-center justify-center border-2 border-white/10 shadow-lg">
               {/* Simulated Camera Feed */}
               <div className="absolute inset-0 bg-gradient-to-br from-dark-elevated via-dark-surface to-dark-elevated"></div>
               
@@ -86,13 +86,13 @@ const AnomalyDetectionPage = () => {
 
               {/* Sample object outline */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-48 h-48 border-2 border-neon-blue/50 rounded-lg transform rotate-6 animate-pulse"></div>
+                <div className="w-56 h-56 border-2 border-neon-blue/50 rounded-lg transform rotate-6 animate-pulse"></div>
               </div>
 
               {/* Heatmap Overlay Animation */}
               {showHeatmap && inspectionStatus === 'complete' && anomalyDetected && (
                 <motion.div
-                  className="absolute top-1/4 right-1/3 w-32 h-32 rounded-full"
+                  className="absolute top-1/4 right-1/3 w-36 h-36 rounded-full"
                   style={{
                     background: 'radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 165, 0, 0.4) 50%, transparent 70%)',
                     filter: 'blur(10px)'
@@ -107,16 +107,16 @@ const AnomalyDetectionPage = () => {
               <div className="relative z-10 text-center">
                 {inspectionStatus === 'idle' && (
                   <div>
-                    <svg className="w-16 h-16 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-20 h-20 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    <p className="text-gray-500">Camera feed placeholder</p>
+                    <p className="text-gray-500 text-lg">Camera feed placeholder</p>
                   </div>
                 )}
                 {inspectionStatus === 'running' && (
                   <div>
-                    <div className="w-12 h-12 border-4 border-neon-cyan border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                    <p className="text-neon-cyan">Analyzing surface...</p>
+                    <div className="w-14 h-14 border-4 border-neon-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-neon-cyan text-lg font-medium">Analyzing surface...</p>
                   </div>
                 )}
               </div>
@@ -130,9 +130,9 @@ const AnomalyDetectionPage = () => {
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.3 }}
                   >
-                    <div className="w-24 h-24 border-2 border-red-500 rounded-full animate-pulse"></div>
+                    <div className="w-28 h-28 border-2 border-red-500 rounded-full animate-pulse"></div>
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                      <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-10 h-10 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                       </svg>
                     </div>
@@ -144,20 +144,20 @@ const AnomalyDetectionPage = () => {
             {/* Status Bar */}
             {inspectionStatus === 'complete' && (
               <motion.div
-                className="mt-4 p-4 rounded-lg bg-dark-surface border border-white/10"
+                className="mt-6 p-5 rounded-xl bg-dark-surface border border-white/10"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full ${anomalyDetected ? 'bg-red-500' : 'bg-neon-green'}`}></div>
-                    <span className={`font-semibold ${anomalyDetected ? 'text-red-400' : 'text-neon-green'}`}>
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-4 h-4 rounded-full ${anomalyDetected ? 'bg-red-500' : 'bg-neon-green'}`}></div>
+                    <span className={`font-semibold text-lg ${anomalyDetected ? 'text-red-400' : 'text-neon-green'}`}>
                       {anomalyDetected ? 'Anomaly Detected' : 'Normal - No Anomalies'}
                     </span>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-400">Confidence</p>
-                    <p className="text-xl font-bold text-neon-cyan">{confidence.toFixed(1)}%</p>
+                    <p className="text-sm text-gray-400 mb-1">Confidence</p>
+                    <p className="text-2xl font-bold text-neon-cyan">{confidence.toFixed(1)}%</p>
                   </div>
                 </div>
               </motion.div>
@@ -170,7 +170,7 @@ const AnomalyDetectionPage = () => {
               <button
                 onClick={handleStartInspection}
                 data-testid="start-anomaly-inspection-btn"
-                className="flex-1 px-6 py-4 bg-gradient-to-r from-neon-blue to-neon-cyan text-white font-semibold rounded-lg shadow-neon-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105"
+                className="flex-1 px-8 py-5 bg-gradient-to-r from-neon-blue to-neon-cyan text-white font-semibold rounded-xl shadow-neon-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105 text-lg"
               >
                 Start Inspection
               </button>
@@ -180,14 +180,14 @@ const AnomalyDetectionPage = () => {
                 <button
                   onClick={handleRerun}
                   data-testid="rerun-analysis-btn"
-                  className="flex-1 px-6 py-4 bg-neon-blue text-white font-semibold rounded-lg hover:bg-neon-cyan transition-all duration-300"
+                  className="flex-1 px-8 py-5 bg-neon-blue text-white font-semibold rounded-xl hover:bg-neon-cyan transition-all duration-300 text-lg"
                 >
                   Re-run Analysis
                 </button>
                 <button
                   onClick={handleFlag}
                   data-testid="flag-for-review-btn"
-                  className="flex-1 px-6 py-4 bg-dark-elevated text-gray-300 font-semibold rounded-lg border border-white/10 hover:border-neon-blue/50 transition-all duration-300"
+                  className="flex-1 px-8 py-5 bg-dark-elevated text-gray-300 font-semibold rounded-xl border-2 border-white/10 hover:border-neon-blue/50 transition-all duration-300 text-lg"
                 >
                   Flag for Review
                 </button>
