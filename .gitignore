@@ -22,3 +22,9 @@ __pycache__/
 
 # Logs
 *.log
+
+# Rust
+**/target/
+*.rlib
+*.rmeta
+*.a
