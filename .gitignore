@@ -1,3 +1,24 @@
-*/target/
-*/project.env
 
+# Rust build output
+target/
+**/target/
+
+# OpenCV / build artifacts
+*.rlib
+*.rmeta
+*.a
+*.o
+*.so
+*.dylib
+*.dll
+
+# Python / NumPy artifacts
+*.npy
+*.npz
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log
