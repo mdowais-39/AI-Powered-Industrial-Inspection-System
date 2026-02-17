@@ -2,29 +2,26 @@ import React, { useState } from 'react';
 import { InspectionProvider, useInspection } from './context/InspectionContext';
 import AnimatedBackground from './components/AnimatedBackground';
 import Sidebar from './components/Sidebar';
-import LandingScreen from './screens/LandingScreen';
-import MeasurementInputScreen from './screens/MeasurementInputScreen';
-import ReviewScreen from './screens/ReviewScreen';
-import ResultsScreen from './screens/ResultsScreen';
+import AnomalyDetectionPage from './pages/AnomalyDetectionPage';
+import ObjectMeasurementPage from './pages/ObjectMeasurementPage';
+import AssemblyVerificationPage from './pages/AssemblyVerificationPage';
 import './App.css';
 
 const AppContent = () => {
-  const { currentStep } = useInspection();
+  const { currentPage } = useInspection();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const renderScreen = () => {
-    switch (currentStep) {
-      case 0:
-        return <LandingScreen />;
-      case 1:
-        return <MeasurementInputScreen />;
-      case 2:
-        return <ReviewScreen />;
-      case 3:
-        return <ResultsScreen />;
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'anomaly':
+        return <AnomalyDetectionPage />;
+      case 'measurement':
+        return <ObjectMeasurementPage />;
+      case 'assembly':
+        return <AssemblyVerificationPage />;
       default:
-        return <LandingScreen />;
+        return <ObjectMeasurementPage />;
     }
   };
 
@@ -64,7 +61,7 @@ const AppContent = () => {
         {/* Main Content */}
         <main className={`flex-1 p-4 lg:p-8 transition-all duration-300 flex items-center justify-center min-h-screen ${sidebarCollapsed ? 'lg:pl-24' : 'lg:pl-72'}`}>
           <div className="w-full max-w-7xl mx-auto">
-            {renderScreen()}
+            {renderPage()}
           </div>
         </main>
       </div>
