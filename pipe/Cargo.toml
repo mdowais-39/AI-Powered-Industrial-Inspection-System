@@ -1,0 +1,26 @@
+[package]
+name = "pipe"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+members = [
+    "pipe_core",
+    "detect",
+    "io",
+    "output",
+"calliberation", "measurement"]
+[dependencies]
+anyhow = "1.0.100"
+opencv = "0.98.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = "0.4"
+pipe_core = { path = "pipe_core" }
+output= { path = "output" }
+io= { path = "io" }
+detect = { version = "0.1.0", path = "detect" }
+measurement = { version = "0.1.0", path = "measurement" }
+calliberation = { version = "0.1.0", path = "calliberation" }
+base64 = "0.22"
+
