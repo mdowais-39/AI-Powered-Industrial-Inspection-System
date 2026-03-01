@@ -4,7 +4,7 @@ import os
 IMG_SIZE = 224
 COLOR_MODE = "rgb"
 
-BASE_PATH = r"C:\Users\mdkai\OneDrive\Desktop\AIML PROJECTS\Aerothon\Aerothon"
+BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 DATASETS = {
     "cable": os.path.join(BASE_PATH, "cable", "train", "good"),

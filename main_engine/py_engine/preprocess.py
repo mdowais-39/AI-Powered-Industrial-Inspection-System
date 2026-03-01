@@ -1,11 +1,12 @@
 # src/preprocess.py
 import cv2
 import numpy as np
-from config import IMG_SIZE, COLOR_MODE
 
 # ------------------------------
 # Used for dataset ingestion (Phase 1–3)
 # ------------------------------
+IMG_SIZE = 224
+COLOR_MODE = "rgb"
 def preprocess_image(img_path):
     img = cv2.imread(img_path)
     if img is None:

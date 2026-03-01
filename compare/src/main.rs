@@ -1,7 +1,6 @@
 
 use anyhow::Result;
 use opencv::{
-    highgui,
     imgproc,
     core::{Scalar, Point, Size, Mat, Vector},
     prelude::MatTraitConst,
@@ -18,7 +17,7 @@ use io::{
     stage::CameraSourceStage,
 };
 use detect::{EdgeMaskStage, DetectStage};
-use output::{display::DisplayStage, overlay::OverlayStage};
+use output::overlay::OverlayStage;
 use calliberation::caliberate::calibrate_camera;
 use calliberation::detect::detect_chessboard;
 
@@ -56,12 +55,13 @@ fn main() -> Result<()> {
     let square_size_mm = 25.0;
     let required_frames = 15;
     
-    let mut mode = RunMode::Calibrating;
+    // Start directly in reference mode for web control flow.
+    // Users can still press 'c' to enter calibration when needed.
+    let mut mode = RunMode::SetReference;
     let mut calib_images: Vec<Mat> = Vec::new();
     let mut last_capture = Instant::now();
     let capture_interval = Duration::from_millis(800);
     
-    let mut reference_contours: Option<Vector<Vector<Point>>> = None;
     let mut compare_pipeline: Option<Pipeline> = None;
 
     println!("[INFO] Press 'c' to calibrate | 'r' to set reference | q/ESC to quit");
@@ -98,7 +98,6 @@ fn main() -> Result<()> {
         
         ctx.fg_mask = None;
         ctx.contours.clear();
-
         match mode {
             // =============================================
             // CALIBRATION
@@ -235,44 +234,42 @@ fn main() -> Result<()> {
         if let Ok(key_char) = rx.try_recv() {
             let key = key_char as u8;
             match key {
-                b'c' if matches!(mode, RunMode::SetReference) => {
+                b'c' if matches!(mode, RunMode::SetReference | RunMode::Compare) => {
                     calib_images.clear();
                     last_capture = Instant::now();
                     mode = RunMode::Calibrating;
                     println!("[CALIB] Started");
                 }
-                b'r' if matches!(mode, RunMode::SetReference) => {
-                     // Capture reference
-                    reference_contours = Some(ctx.contours.clone());
-                    println!("[REFERENCE] Captured {} parts", ctx.contours.len());
-                    
-                    // ALSO capture the original frame as reference image and send it
-                    // TODO: Should we draw contours on it first? Maybe best to send clean reference.
-                    // Or maybe send the one with overlays. Let's send current frame.
-                    if let Some(frame) = ctx.frame.as_ref() {
-                         let mut buf = Vector::new();
-                         let mut params = Vector::new();
-                         params.push(opencv::imgcodecs::IMWRITE_JPEG_QUALITY);
-                         params.push(80); // Higher quality for reference
-                         if opencv::imgcodecs::imencode(".jpg", frame, &mut buf, &params).is_ok() {
+                b'r' if matches!(mode, RunMode::SetReference | RunMode::Compare) => {
+                    let current_reference = ctx.contours.clone();
+                    if current_reference.is_empty() {
+                        println!("[REFERENCE] No parts detected; keep object in view and press 'r' again");
+                    } else {
+                        println!("[REFERENCE] Captured {} parts", current_reference.len());
+
+                        // Send current frame as reference preview for frontend.
+                        if let Some(frame) = ctx.frame.as_ref() {
+                            let mut buf = Vector::new();
+                            let mut params = Vector::new();
+                            params.push(opencv::imgcodecs::IMWRITE_JPEG_QUALITY);
+                            params.push(80);
+                            if opencv::imgcodecs::imencode(".jpg", frame, &mut buf, &params).is_ok() {
                             let b64 = BASE64.encode(buf.as_slice());
                             println!("REF_IMAGE:{}", b64);
+                            }
                         }
-                    }
 
-                    // Build compare pipeline
-                    let mut new_pipeline = Pipeline::new();
-                    new_pipeline.add_stage(EdgeMaskStage);
-                    new_pipeline.add_stage(DetectStage);
-                    new_pipeline.add_stage(CompareStage::new(reference_contours.clone().unwrap()));
-                    // DisplayStage is no longer needed since we stream manually, but OverlayStage runs before it.
-                    // new_pipeline.add_stage(DisplayStage::new("Compare View")?); // Removed
-                    new_pipeline.add_stage(OverlayStage); // Ensure overlays are drawn
-                    
-                    compare_pipeline = Some(new_pipeline);
-                    
-                    mode = RunMode::Compare;
-                    println!("[INFO] Now in Compare Mode");
+                        // Build/refresh compare pipeline from the latest reference.
+                        let mut new_pipeline = Pipeline::new();
+                        new_pipeline.add_stage(EdgeMaskStage);
+                        new_pipeline.add_stage(DetectStage);
+                        new_pipeline.add_stage(CompareStage::new(current_reference));
+                        new_pipeline.add_stage(OverlayStage);
+
+                        compare_pipeline = Some(new_pipeline);
+                        mode = RunMode::Compare;
+                        println!("[INFO] Compare pipeline refreshed");
+                    }
                 }
                 b'q' => break,
                 _ => {}

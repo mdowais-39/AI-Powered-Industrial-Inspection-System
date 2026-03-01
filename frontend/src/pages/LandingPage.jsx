@@ -17,6 +17,11 @@ const LandingPage = () => {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        const base = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+        fetch(`${base}/api/stop`, { method: 'POST' }).catch(() => {});
+    }, []);
+
     const tasks = [
         {
             id: 'anomaly',

@@ -34,11 +34,6 @@ struct ProcessHandle {
 }
 
 #[derive(Deserialize)]
-struct StartRequest {
-    module: String, // "python", "pipe", or "compare"
-}
-
-#[derive(Deserialize)]
 struct InputRequest {
     input: String,
 }
@@ -90,7 +85,20 @@ async fn main() {
 }
 
 async fn status_handler(State(state): State<Arc<AppState>>) -> Json<StatusResponse> {
-    let active = state.active_process.lock().await;
+    let mut active = state.active_process.lock().await;
+
+    if let Some(handle) = active.as_mut() {
+        match handle.child.try_wait() {
+            Ok(Some(_)) => {
+                tracing::info!("Clearing exited module handle: {}", handle.module);
+                *active = None;
+            }
+            Ok(None) => {}
+            Err(e) => {
+                tracing::warn!("Failed to query child status: {}", e);
+            }
+        }
+    }
     
     if let Some(handle) = active.as_ref() {
         Json(StatusResponse {
@@ -114,6 +122,24 @@ async fn input_handler(
     let mut active = state.active_process.lock().await;
     
     if let Some(handle) = active.as_mut() {
+        // If process already exited, clear stale handle and report no module.
+        match handle.child.try_wait() {
+            Ok(Some(_)) => {
+                let module_name = handle.module.clone();
+                tracing::info!("Input ignored, module already exited: {}", module_name);
+                *active = None;
+                return Json(StatusResponse {
+                    status: "error".to_string(),
+                    message: format!("Module {} is not running", module_name),
+                    running_module: None,
+                });
+            }
+            Ok(None) => {}
+            Err(e) => {
+                tracing::warn!("Failed to query child status before input: {}", e);
+            }
+        }
+
         if let Some(stdin) = handle.stdin.as_mut() {
             tracing::info!("Sending input to {}: {}", handle.module, payload.input);
             
@@ -187,15 +213,35 @@ async fn start_handler(
         }
     }
 
-    // Determine command to run
-    let (cmd, args) = match module.as_str() {
-        "python" => ("python3", vec!["src/live_camera_async.py"]),
-        "pipe" => ("pipe/target/release/pipe", vec![]),
-        "compare" => ("compare/target/release/compare", vec![]),
+    // Determine command to run.
+    // Accept aliases so frontend routes can map directly to module semantics.
+    let (cmd, args): (&str, Vec<&str>) = match module.as_str() {
+        "python" | "live_camera_async" | "anomaly" => {
+            ("python3", vec!["src/live_camera_async.py"])
+        }
+        "pipe" | "measurement" => {
+            if std::path::Path::new("../pipe/target/release/pipe").exists() {
+                ("pipe/target/release/pipe", vec![])
+            } else {
+                // Fallback if release binary is not built yet.
+                ("cargo", vec!["run", "--release", "--manifest-path", "pipe/Cargo.toml"])
+            }
+        }
+        "compare" | "assembly" => {
+            if std::path::Path::new("../compare/target/release/compare").exists() {
+                ("compare/target/release/compare", vec![])
+            } else {
+                // Fallback if release binary is not built yet.
+                ("cargo", vec!["run", "--release", "--manifest-path", "compare/Cargo.toml"])
+            }
+        }
         _ => {
             return Json(StatusResponse {
                 status: "error".to_string(),
-                message: format!("Unknown module: {}", module),
+                message: format!(
+                    "Unknown module: {} (supported: python/live_camera_async/anomaly, pipe/measurement, compare/assembly)",
+                    module
+                ),
                 running_module: None,
             })
         }
@@ -233,6 +279,7 @@ async fn start_handler(
                             // Frame data, wrap in JSON
                             let msg = serde_json::json!({
                                 "type": "frame",
+                                "module": module_name,
                                 "data": frame_b64
                             }).to_string();
                             // Don't log full frame, too big
@@ -242,6 +289,7 @@ async fn start_handler(
                             // Reference image, wrap in JSON
                              let msg = serde_json::json!({
                                 "type": "ref_image",
+                                "module": module_name,
                                 "data": ref_b64
                             }).to_string();
                             tracing::info!("Broadcasting Reference Image");
@@ -287,6 +335,13 @@ async fn stop_handler(State(state): State<Arc<AppState>>) -> Json<StatusResponse
     let mut active = state.active_process.lock().await;
     
     if let Some(mut handle) = active.take() {
+        if let Ok(Some(_)) = handle.child.try_wait() {
+            return Json(StatusResponse {
+                status: "success".to_string(),
+                message: format!("{} already stopped", handle.module),
+                running_module: None,
+            });
+        }
         tracing::info!("Stopping module: {}", handle.module);
         let _ = handle.child.start_kill();
         

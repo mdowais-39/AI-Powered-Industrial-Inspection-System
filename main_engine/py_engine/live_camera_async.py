@@ -22,7 +22,7 @@ from box_tracker import BoxTracker
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print("Using device:", DEVICE)
 
-memory_bank = np.load("memory_bank.npy")
+memory_bank = np.load("../model/memory_bank.npy")
 scorer = AnomalyScorer(memory_bank, k=5)
 
 model = ResNetBackbone().to(DEVICE)

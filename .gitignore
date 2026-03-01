@@ -23,6 +23,12 @@ target/
 __pycache__/
 *.pyc
 
+# Node/Vite artifacts
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+
 # Logs
 *.log
 

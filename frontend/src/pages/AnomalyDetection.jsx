@@ -1,142 +1,80 @@
-import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { AlertTriangle, Activity, CheckCircle } from 'lucide-react';
-import { useBackend } from '../hooks/useBackend';
+import React from 'react';
+import { Activity, AlertTriangle } from 'lucide-react';
+import { useModuleRuntime } from '../lib/moduleRuntime';
 
 const AnomalyDetection = () => {
-    const { startModule, stopModule, latestData, latestFrame, isConnected } = useBackend();
+    const {
+        status,
+        message,
+        wsConnected,
+        runningModule,
+        frameSrc,
+        lastEvent,
+        startModule,
+        refreshStatus,
+    } = useModuleRuntime('python');
 
-    // Automatically start Python module on mount
-    useEffect(() => {
-        console.log('Starting Python anomaly detection module');
-        startModule('python');
-
-        return () => {
-            console.log('Stopping anomaly detection module');
-            stopModule();
-        };
-    }, []);
+    const anomalyData =
+        lastEvent?.module === 'python' && lastEvent?.event === 'anomaly_update'
+            ? lastEvent.data
+            : null;
 
     return (
         <div className="h-screen flex flex-col p-6 gap-6 w-full max-w-[1600px] mx-auto">
-            {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-100">Anomaly Detection</h1>
-                    <p className="text-slate-400">Real-time surface defect analysis</p>
+                    <p className="text-slate-400">Live module: `src/live_camera_async.py`</p>
                 </div>
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded text-green-400 text-sm font-medium">
-                        <Activity className="w-4 h-4" />
-                        Model Running
-                    </div>
+                <div className="flex items-center gap-3">
+                    <button onClick={startModule} className="px-3 py-2 rounded bg-cyan-500 text-black text-sm font-semibold">
+                        Restart
+                    </button>
+                    <button onClick={refreshStatus} className="px-3 py-2 rounded bg-slate-800 text-slate-200 text-sm border border-slate-700">
+                        Status
+                    </button>
                 </div>
             </div>
 
             <div className="flex-1 flex gap-6 overflow-hidden">
-                {/* Main Viewport */}
-                <div className="flex-[3] bg-black rounded-lg border border-slate-800 relative overflow-hidden group">
-                    {/* Video Feed */}
-                    <div className="absolute inset-0 bg-slate-900 flex items-center justify-center">
-                        {latestFrame ? (
-                            <img
-                                src={`data:image/jpeg;base64,${latestFrame}`}
-                                alt="Live Feed"
-                                className="w-full h-full object-contain"
-                            />
-                        ) : (
-                            <div className="flex flex-col items-center gap-4">
-                                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
-                                <div className="relative z-10 flex flex-col items-center gap-2">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-500"></div>
-                                    <p className="text-slate-500 font-mono">Waiting for camera stream...</p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Simulated Defect Overlays */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0.4, 1, 0.4] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="absolute top-[30%] left-[40%] w-32 h-32 border-2 border-red-500/80 rounded bg-red-500/10 flex items-start justify-start p-1"
-                    >
-                        <div className="text-[10px] bg-red-500 text-white px-1">SCRATCH 98%</div>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0.2, 0.8, 0.2] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                        className="absolute top-[60%] left-[20%] w-24 h-24 border-2 border-orange-500/80 rounded border-dashed bg-orange-500/10 flex items-start justify-start p-1"
-                    >
-                        <div className="text-[10px] bg-orange-500 text-white px-1">TEXTURE</div>
-                    </motion.div>
-
-                    {/* Scanning Line - Industrial Effect */}
-                    <motion.div
-                        animate={{ top: ['0%', '100%'] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                        className="absolute left-0 w-full h-[2px] bg-cyan-500/50 shadow-[0_0_20px_rgba(34,211,238,0.5)] z-10"
-                    />
+                <div className="flex-[3] bg-black rounded-lg border border-slate-800 relative overflow-hidden">
+                    {frameSrc ? (
+                        <img src={frameSrc} alt="Live anomaly feed" className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="w-full h-full grid place-items-center text-slate-500">Waiting for frame stream...</div>
+                    )}
                 </div>
 
-                {/* Right Panel - Inspector */}
-                <div className="flex-1 bg-slate-900/50 border border-slate-800 rounded-lg p-6 flex flex-col">
-                    <h3 className="text-lg font-semibold text-slate-200 mb-6 flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5 text-yellow-500" /> Detected Anomalies
+                <div className="flex-1 bg-slate-900/50 border border-slate-800 rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5 text-yellow-500" /> Runtime
                     </h3>
-
-                    <div className="space-y-4 flex-1">
-                        <div className="p-4 bg-slate-800/50 rounded border-l-4 border-red-500">
-                            <div className="flex justify-between items-start mb-2">
-                                <span className="text-red-400 font-bold text-sm">CRITICAL</span>
-                                <span className="text-slate-500 text-xs">00:01:23</span>
-                            </div>
-                            <h4 className="text-slate-200 font-medium">Surface Scratch</h4>
-                            <p className="text-slate-400 text-sm mt-1">Found in Sector 4</p>
-                            <div className="mt-3 flex items-center gap-2">
-                                <div className="h-1 flex-1 bg-slate-700 rounded-full overflow-hidden">
-                                    <div className="h-full w-[98%] bg-red-500" />
-                                </div>
-                                <span className="text-xs text-slate-300">98%</span>
-                            </div>
+                    <div className="space-y-3 text-sm">
+                        <div className="flex justify-between">
+                            <span className="text-slate-400">Backend Status</span>
+                            <span className="text-slate-200">{status}</span>
                         </div>
-
-                        <div className="p-4 bg-slate-800/50 rounded border-l-4 border-orange-500">
-                            <div className="flex justify-between items-start mb-2">
-                                <span className="text-orange-400 font-bold text-sm">WARNING</span>
-                                <span className="text-slate-500 text-xs">00:01:21</span>
-                            </div>
-                            <h4 className="text-slate-200 font-medium">Texture Irregularity</h4>
-                            <p className="text-slate-400 text-sm mt-1">Found in Sector 2</p>
-                            <div className="mt-3 flex items-center gap-2">
-                                <div className="h-1 flex-1 bg-slate-700 rounded-full overflow-hidden">
-                                    <div className="h-full w-[78%] bg-orange-500" />
-                                </div>
-                                <span className="text-xs text-slate-300">78%</span>
-                            </div>
+                        <div className="flex justify-between">
+                            <span className="text-slate-400">WebSocket</span>
+                            <span className={wsConnected ? 'text-green-400' : 'text-red-400'}>
+                                {wsConnected ? 'connected' : 'disconnected'}
+                            </span>
                         </div>
+                        <div className="flex justify-between">
+                            <span className="text-slate-400">Running Module</span>
+                            <span className="text-slate-200">{runningModule || '-'}</span>
+                        </div>
+                        <div className="p-3 bg-slate-800 rounded text-slate-300">{message || 'No message'}</div>
                     </div>
 
-                    <div className="mt-auto pt-6 border-t border-slate-800">
-                        <div className="flex justify-between text-sm mb-2">
-                            <span className="text-slate-400">Processed Items</span>
-                            <span className="text-slate-200">1,248</span>
+                    <div className="mt-6 p-4 bg-slate-800/50 rounded border border-slate-700">
+                        <div className="text-slate-300 font-medium mb-2 flex items-center gap-2">
+                            <Activity className="w-4 h-4 text-cyan-400" /> Model Output
                         </div>
-                        <div className="flex justify-between text-sm mb-4">
-                            <span className="text-slate-400">Defect Rate</span>
-                            <span className="text-red-400">1.2%</span>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            <button className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded text-xs transition-colors flex items-center justify-center gap-2">
-                                Export CSV
-                            </button>
-                            <button className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded text-xs transition-colors flex items-center justify-center gap-2">
-                                Export JSON
-                            </button>
+                        <div className="text-sm text-slate-300">
+                            <div>Stable Defect: {String(anomalyData?.stable_defect ?? false)}</div>
+                            <div>Boxes: {anomalyData?.boxes ?? 0}</div>
+                            <div>FPS: {anomalyData?.fps?.toFixed ? anomalyData.fps.toFixed(1) : '0.0'}</div>
                         </div>
                     </div>
                 </div>

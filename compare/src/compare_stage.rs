@@ -277,7 +277,8 @@ impl Stage for CompareStage {
             },
         };
         
-        if let Ok(json) = serde_json::to_string_pretty(&summary) {
+        // Keep this JSON on a single line so backend line-reader can forward it intact.
+        if let Ok(json) = serde_json::to_string(&summary) {
             println!("JSON_OUTPUT:{}", json);
         }
         
