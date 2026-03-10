@@ -7,9 +7,9 @@ from backbone import ResNetBackbone
 from feature_extractor import extract_patch_features
 from anomaly_scoring import AnomalyScorer
 from heatmap import build_heatmap
-from preprocess import preprocess_image
+from preprocess import preprocess_frame          # was preprocess_image (disk-based)
 from bbox import extract_bboxes
-
+from fps import FPSCounter
 
 # -------------------- SETUP --------------------
 
@@ -17,12 +17,14 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print("Using device:", DEVICE)
 
 memory_bank = np.load("memory_bank.npy")
-scorer = AnomalyScorer(memory_bank, k=5)
+scorer = AnomalyScorer(memory_bank, k=5, device=DEVICE)   # GPU scorer
 
 model = ResNetBackbone().to(DEVICE)
 model.eval()
 
 cap = cv2.VideoCapture(0)  # 0 = webcam, or RTSP URL
+
+fps_counter = FPSCounter()
 
 # -------------------- LOOP --------------------
 cv2.namedWindow("Live Anomaly Detection", cv2.WINDOW_NORMAL)
@@ -38,15 +40,15 @@ while True:
         break
 
     frame_resized = cv2.resize(frame, (224, 224))
-    temp_path = "temp.jpg"
-    cv2.imwrite(temp_path, frame_resized)
 
-    img = preprocess_image(temp_path)
+    # Preprocess directly from frame — no disk I/O
+    img = preprocess_frame(frame_resized)
     img_tensor = torch.tensor(img).permute(2, 0, 1).unsqueeze(0).float().to(DEVICE)
 
     with torch.no_grad():
         features = model(img_tensor)
 
+    # patch features stay GPU tensor; scorer.score() handles GPU → numpy
     patch_features = extract_patch_features(features)
     scores = scorer.score(patch_features)
 
@@ -67,13 +69,12 @@ while True:
         cv2.rectangle(overlay, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
     # Status text
+    current_fps = fps_counter.update()
     status = "DEFECT" if len(boxes) > 0 else "NORMAL"
     color = (0, 0, 255) if status == "DEFECT" else (0, 255, 0)
 
-    cv2.putText(
-        overlay, status, (10, 30),
-        cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2
-    )
+    cv2.putText(overlay, status, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+    cv2.putText(overlay, f"FPS: {current_fps}", (10, 65), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 0), 2)
 
     cv2.imshow("Live Anomaly Detection", overlay)
 

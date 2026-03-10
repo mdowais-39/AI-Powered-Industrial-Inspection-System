@@ -4,7 +4,7 @@ import os
 import threading
 import time
 from collections import deque
-
+from pathlib import Path
 import cv2
 import numpy as np
 import torch
@@ -26,9 +26,11 @@ if hasattr(os.sys.stdout, "reconfigure"):
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"[PYTHON] Using device: {DEVICE}", flush=True)
+BASE_DIR = Path(__file__).resolve().parent.parent
+memory_bank_path = BASE_DIR / "model" / "memory_bank.npy"
 
-memory_bank = np.load("memory_bank.npy")
-scorer = AnomalyScorer(memory_bank, k=5)
+memory_bank = np.load(memory_bank_path)
+scorer = AnomalyScorer(memory_bank, k=5, device=DEVICE)
 
 model = ResNetBackbone().to(DEVICE)
 model.eval()

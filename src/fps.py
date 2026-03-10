@@ -1,13 +1,22 @@
 # src/fps.py
 import time
+from collections import deque
+
 
 class FPSCounter:
-    def __init__(self):
-        self.prev_time = time.time()
-        self.fps = 0
+    """
+    Smoothed FPS counter using a rolling average over the last N frames.
+    Raw per-frame FPS (1 / dt) is noisy; averaging over a window gives
+    a stable reading without hiding sudden real drops.
+    """
 
-    def update(self):
-        curr_time = time.time()
-        self.fps = 1 / (curr_time - self.prev_time + 1e-6)
-        self.prev_time = curr_time
-        return int(self.fps)
+    def __init__(self, window: int = 30):
+        self.timestamps = deque(maxlen=window)
+
+    def update(self) -> float:
+        now = time.perf_counter()
+        self.timestamps.append(now)
+        if len(self.timestamps) < 2:
+            return 0.0
+        elapsed = self.timestamps[-1] - self.timestamps[0]
+        return (len(self.timestamps) - 1) / (elapsed + 1e-9)
